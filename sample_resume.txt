@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 John Doe
 john.doe@email.com
 
@@ -14,4 +15,22 @@ Education:
 BS Computer Science, University of Example, 2020
 
 Certifications:
+=======
+John Doe
+john.doe@email.com
+
+Skills: Python, Machine Learning, Data Analysis, SQL
+
+Experience:
+Software Engineer at TechCorp
+2020-2023
+- Developed ML models using Python
+- Built data pipelines with SQL
+- Collaborated on cross-functional teams
+
+Education:
+BS Computer Science, University of Example, 2020
+
+Certifications:
+>>>>>>> 06116eaa0f9be49c8fcaabd5f2720b3ecc5dc093
 AWS Certified Developer

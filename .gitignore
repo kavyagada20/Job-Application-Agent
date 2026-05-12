@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Environment variables (API Keys)
 .env
 
@@ -14,4 +15,22 @@ outputs/
 temp_*
 
 # OS generated files
+=======
+# Environment variables (API Keys)
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Project specific files
+outputs/
+temp_*
+
+# OS generated files
+>>>>>>> 06116eaa0f9be49c8fcaabd5f2720b3ecc5dc093
 .DS_Store

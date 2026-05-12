@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 groq
 pdfplumber
 tavily-python
@@ -7,4 +8,15 @@ python-dotenv
 requests
 beautifulsoup4
 flask
+=======
+groq
+pdfplumber
+tavily-python
+python-docx
+streamlit
+python-dotenv
+requests
+beautifulsoup4
+flask
+>>>>>>> 06116eaa0f9be49c8fcaabd5f2720b3ecc5dc093
 google-api-core
