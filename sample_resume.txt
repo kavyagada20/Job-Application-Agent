@@ -1,0 +1,17 @@
+John Doe
+john.doe@email.com
+
+Skills: Python, Machine Learning, Data Analysis, SQL
+
+Experience:
+Software Engineer at TechCorp
+2020-2023
+- Developed ML models using Python
+- Built data pipelines with SQL
+- Collaborated on cross-functional teams
+
+Education:
+BS Computer Science, University of Example, 2020
+
+Certifications:
+AWS Certified Developer

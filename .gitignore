@@ -1,0 +1,17 @@
+# Environment variables (API Keys)
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Project specific files
+outputs/
+temp_*
+
+# OS generated files
+.DS_Store

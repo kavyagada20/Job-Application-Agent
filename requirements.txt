@@ -1,0 +1,10 @@
+groq
+pdfplumber
+tavily-python
+python-docx
+streamlit
+python-dotenv
+requests
+beautifulsoup4
+flask
+google-api-core
