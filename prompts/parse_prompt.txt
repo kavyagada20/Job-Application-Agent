@@ -19,6 +19,9 @@ Extract structured information from the provided resume and job description. Ret
   "job_description": {{
     "job_title": "string",
     "company_name": "string",
+    "location": "string (e.g. Remote, New York NY, Mumbai, or Not specified)",
+    "experience_requirements": "string (e.g. 3+ years, Entry Level, Senior, or Not specified)",
+    "salary_range": "string (e.g. $120k-$150k or Not specified)",
     "required_skills": ["array of strings"],
     "preferred_skills": ["array of strings"],
     "keywords": ["array of strings"],
