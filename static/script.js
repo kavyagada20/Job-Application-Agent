@@ -1,3 +1,49 @@
+// Configure Marked.js options for safe & clean rendering
+if (window.marked) {
+    marked.setOptions({
+        gfm: true,
+        breaks: true,
+        headerIds: false
+    });
+}
+
+// Global Tab Switching
+function switchTab(tabId, btnElement) {
+    // Hide all tab panes
+    const panes = document.querySelectorAll('.tab-pane');
+    panes.forEach(pane => pane.classList.remove('active'));
+
+    // Deactivate all tab buttons
+    const buttons = document.querySelectorAll('.tab-btn');
+    buttons.forEach(btn => btn.classList.remove('active'));
+
+    // Show target tab pane
+    const targetPane = document.getElementById(tabId);
+    if (targetPane) {
+        targetPane.classList.add('active');
+    }
+
+    // Activate button
+    if (btnElement) {
+        btnElement.classList.add('active');
+    }
+}
+
+// Copy Content to Clipboard
+function copyContent(elementId) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+
+    // Use textContent or innerText to copy raw formatted text
+    const textToCopy = element.innerText || element.textContent;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        alert("Copied to clipboard!");
+    }).catch(err => {
+        alert("Failed to copy text: " + err);
+    });
+}
+
+// Form Submission & Workflow Management
 document.getElementById('applicationForm').addEventListener('submit', async function(e) {
     e.preventDefault();
 
@@ -6,41 +52,50 @@ document.getElementById('applicationForm').addEventListener('submit', async func
     const loading = document.getElementById('loading');
     const results = document.getElementById('results');
     const statusText = document.getElementById('status-text');
+    const progressFill = document.getElementById('progressFill');
 
-    // UI State Management
+    // UI State Transition
     mainUI.style.display = 'none';
     loading.style.display = 'block';
 
-    // Simulated status updates for Groq processing
-    const steps = ["Parsing your resume...", "Researching company culture...", "Tailoring experience bullets...", "Writing cover letter..."];
+    const steps = [
+        "Parsing your resume document...",
+        "Researching company culture & tech stack...",
+        "Tailoring experience bullet points...",
+        "Drafting customized cover letter...",
+        "Generating STAR behavioral & technical interview prep..."
+    ];
     let stepIdx = 0;
+    progressFill.style.width = '15%';
+
     const interval = setInterval(() => {
         if (stepIdx < steps.length) {
             statusText.innerText = steps[stepIdx];
+            const pct = Math.min(20 + (stepIdx + 1) * 16, 95);
+            progressFill.style.width = pct + '%';
             stepIdx++;
         }
-    }, 3000); // Groq is faster, so we update steps quicker
+    }, 4000);
 
-    // Function to handle the request with a retry for potential service spikes
-    async function processApplication(retries = 2) {
+    async function processApplication() {
         try {
             const response = await fetch('/process', {
                 method: 'POST',
                 body: formData
             });
 
-            // Handle busy/overloaded status (503) if it occurs
-            if (response.status === 503 && retries > 0) {
-                statusText.innerText = "Service is busy, retrying in 5 seconds...";
-                await new Promise(resolve => setTimeout(resolve, 5000));
-                return processApplication(retries - 1);
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.error || `Server Error (${response.status})`);
             }
 
-            const data = await response.json();
-            if (data.error) throw new Error(data.error);
             return data;
 
         } catch (error) {
+            if (error.name === 'TypeError' && error.message.includes('fetch')) {
+                throw new Error("Network connection interrupted. Please verify the Flask server is running and try again.");
+            }
             throw error;
         }
     }
@@ -48,45 +103,76 @@ document.getElementById('applicationForm').addEventListener('submit', async func
     try {
         const data = await processApplication();
         clearInterval(interval);
+        progressFill.style.width = '100%';
 
-        // Populate Content from the API response
-        document.getElementById('companyBrief').textContent = data.company_brief;
-        document.getElementById('tailoredResume').textContent = data.tailored_resume;
-        document.getElementById('coverLetter').textContent = data.cover_letter;
+        // Render Parsed Markdown into formatted HTML
+        const renderMarkdown = (text) => {
+            if (!text) return '<p class="text-muted">No content generated.</p>';
+            return window.marked ? marked.parse(text) : text.replace(/\n/g, '<br>');
+        };
 
-        /** * FIX FOR DOWNLOAD LINKS:
-         * Uses the company_name returned by the backend to find the correct file 
-         * generated by packager.py.
-         */
+        document.getElementById('companyBrief').innerHTML = renderMarkdown(data.company_brief);
+        document.getElementById('tailoredResume').innerHTML = renderMarkdown(data.tailored_resume);
+        document.getElementById('coverLetter').innerHTML = renderMarkdown(data.cover_letter);
+        document.getElementById('interviewPrep').innerHTML = renderMarkdown(data.interview_prep);
+
+        // Update Title Header & Metadata Badges
         const safeCompanyName = data.company_name ? data.company_name.replace(/\s+/g, '_') : 'Company';
+        const displayCompanyName = data.company_name || 'Target Company';
         
-        // Match the naming convention in packager.py: f"{outputs_dir}/tailored_resume_{company_name}.docx"
+        const titleEl = document.getElementById('targetCompanyTitle');
+        if (titleEl) {
+            titleEl.innerHTML = `<i class="fa-solid fa-building"></i> Application Package for ${displayCompanyName}`;
+        }
+
+        const badgesEl = document.getElementById('jobMetadataBadges');
+        if (badgesEl) {
+            let badgesHtml = '';
+            if (data.job_title) badgesHtml += `<span class="meta-tag"><i class="fa-solid fa-briefcase"></i> ${data.job_title}</span>`;
+            if (data.location) badgesHtml += `<span class="meta-tag"><i class="fa-solid fa-location-dot"></i> ${data.location}</span>`;
+            if (data.experience_requirements) badgesHtml += `<span class="meta-tag"><i class="fa-solid fa-user-graduate"></i> ${data.experience_requirements}</span>`;
+            if (data.salary_range && data.salary_range.toLowerCase() !== 'not specified') {
+                badgesHtml += `<span class="meta-tag"><i class="fa-solid fa-money-bill-wave"></i> ${data.salary_range}</span>`;
+            }
+            badgesEl.innerHTML = badgesHtml;
+        }
+
+        // Set Download Links
         document.getElementById('dl-resume').href = `/download/tailored_resume_${safeCompanyName}.docx`;
         document.getElementById('dl-cover').href = `/download/cover_letter_${safeCompanyName}.docx`;
+        
+        const dlPrepEl = document.getElementById('dl-prep');
+        if (dlPrepEl) {
+            dlPrepEl.href = `/download/interview_prep_${safeCompanyName}.docx`;
+        }
 
+        // Display Results
         loading.style.display = 'none';
         results.style.display = 'block';
 
     } catch (error) {
         clearInterval(interval);
-        // Better error messaging for user experience
-        if (error.message.includes("503") || error.message.includes("UNAVAILABLE")) {
-            alert("The AI service is currently overloaded. Please wait a moment and try again.");
-        } else {
-            alert("Error: " + error.message);
-        }
+        alert("Application Processing Error: " + error.message);
         mainUI.style.display = 'block';
         loading.style.display = 'none';
     }
 });
 
-// File Upload Visual Feedback
-document.getElementById('resume').addEventListener('change', function(e) {
-    const fileName = e.target.files[0]?.name;
-    if (fileName) {
-        const label = this.nextElementSibling;
-        label.innerHTML = `<strong>File Selected:</strong><br>${fileName}`;
-        label.style.borderColor = '#2563eb';
-        label.style.background = '#eff6ff';
-    }
-});
+// File Upload Drag & Drop Feedback
+const resumeInput = document.getElementById('resume');
+const dropZone = document.getElementById('file-drop-zone');
+
+if (resumeInput && dropZone) {
+    resumeInput.addEventListener('change', function(e) {
+        const fileName = e.target.files[0]?.name;
+        if (fileName) {
+            dropZone.innerHTML = `
+                <div class="upload-icon" style="color: #10b981;"><i class="fa-solid fa-file-circle-check"></i></div>
+                <span class="upload-title"><strong>File Selected:</strong> ${fileName}</span>
+                <span class="upload-hint">Click or drag another file to change</span>
+            `;
+            dropZone.style.borderColor = '#10b981';
+            dropZone.style.background = 'rgba(16, 185, 129, 0.08)';
+        }
+    });
+}
