@@ -5,21 +5,20 @@ from docx import Document
 def sanitize_text(text):
     """
     Cleans extracted text to improve LLM processing accuracy.
-    - Removes non-ASCII characters.
     - Normalizes multiple whitespaces into a single space.
-    - Removes empty lines.
+    - Removes excessive empty lines.
     """
-    # Remove non-ASCII characters
-    text = text.encode("ascii", "ignore").decode()
-    # Replace multiple newlines or spaces with a single newline/space
+    if not text:
+        return ""
+    # Replace multiple newlines or spaces with a single space
     text = re.sub(r'\n+', '\n', text)
-    text = re.sub(r' +', ' ', text)
+    text = re.sub(r'[ \t]+', ' ', text)
     return text.strip()
 
 def extract_text_from_pdf(pdf_path):
     """Extract and sanitize text from a PDF file."""
+    text = ""
     with pdfplumber.open(pdf_path) as pdf:
-        text = ""
         for page in pdf.pages:
             content = page.extract_text()
             if content:
@@ -36,15 +35,15 @@ def extract_text_from_docx(docx_path):
     return sanitize_text(text)
 
 def extract_text_from_file(file_path):
-    """Extract text from PDF or DOCX file."""
-    if file_path.endswith('.pdf'):
+    """Extract text safely from PDF, DOCX, or TXT file."""
+    lower_path = file_path.lower()
+    if lower_path.endswith('.pdf'):
         return extract_text_from_pdf(file_path)
-    elif file_path.endswith('.docx'):
+    elif lower_path.endswith('.docx'):
         return extract_text_from_docx(file_path)
     else:
-        # Support for plain text files often found in repositories
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
                 return sanitize_text(f.read())
-        except Exception:
-            raise ValueError("Unsupported file type. Use .pdf, .docx, or .txt")
+        except Exception as e:
+            raise ValueError(f"Unsupported or unreadable file: {str(e)}")
