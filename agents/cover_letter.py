@@ -1,8 +1,5 @@
 import os
-from groq import Groq
-import config
-
-client = Groq(api_key=config.GROQ_API_KEY)
+from tools.groq_helper import call_groq_completion
 
 def write_cover_letter(context):
     prompt_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'prompts', 'cover_letter_prompt.txt')
@@ -18,8 +15,6 @@ def write_cover_letter(context):
         responsibilities='; '.join(context.get('job_description', {}).get('responsibilities', []))
     )
 
-    completion = client.chat.completions.create(
-        model=config.GROQ_MODEL,
+    return call_groq_completion(
         messages=[{"role": "user", "content": prompt}]
     )
-    return completion.choices[0].message.content

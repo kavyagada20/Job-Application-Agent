@@ -1,8 +1,5 @@
-from groq import Groq
-import config
 import os
-
-client = Groq(api_key=config.GROQ_API_KEY)
+from tools.groq_helper import call_groq_completion
 
 def generate_interview_prep(context):
     """Generate STAR behavioral questions, technical Q&A, and culture prep."""
@@ -20,8 +17,6 @@ def generate_interview_prep(context):
         company_brief=company_brief
     )
 
-    completion = client.chat.completions.create(
-        model=config.GROQ_MODEL,
+    return call_groq_completion(
         messages=[{"role": "user", "content": prompt}]
     )
-    return completion.choices[0].message.content

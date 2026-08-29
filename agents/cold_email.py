@@ -1,8 +1,5 @@
 import os
-from groq import Groq
-import config
-
-client = Groq(api_key=config.GROQ_API_KEY)
+from tools.groq_helper import call_groq_completion
 
 def generate_cold_email(context):
     """Generate professional cold email / LinkedIn outreach messages."""
@@ -20,9 +17,6 @@ def generate_cold_email(context):
         company_brief=company_brief
     )
 
-    completion = client.chat.completions.create(
-        model=config.GROQ_MODEL,
+    return call_groq_completion(
         messages=[{"role": "user", "content": prompt}]
     )
-    
-    return completion.choices[0].message.content

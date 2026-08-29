@@ -1,9 +1,6 @@
 import os
 import re
-from groq import Groq
-import config
-
-client = Groq(api_key=config.GROQ_API_KEY)
+from tools.groq_helper import call_groq_completion
 
 def analyze_job_fit(context):
     """Analyze candidate resume against JD and produce Match Score & gap breakdown."""
@@ -21,12 +18,9 @@ def analyze_job_fit(context):
         company_brief=company_brief
     )
 
-    completion = client.chat.completions.create(
-        model=config.GROQ_MODEL,
+    analysis_text = call_groq_completion(
         messages=[{"role": "user", "content": prompt}]
     )
-    
-    analysis_text = completion.choices[0].message.content
 
     # Extract score percentage if present
     match = re.search(r'Match Score:\s*(\d+)%', analysis_text, re.IGNORECASE)

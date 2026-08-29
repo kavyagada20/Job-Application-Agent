@@ -1,9 +1,6 @@
 import os
-from groq import Groq
-import config
+from tools.groq_helper import call_groq_completion
 from tools.web_search import search_web
-
-client = Groq(api_key=config.GROQ_API_KEY)
 
 def research_company(company_name, job_title):
     """Research company and return a brief efficiently."""
@@ -26,8 +23,6 @@ def research_company(company_name, job_title):
 
     prompt = prompt_template.format(company_name=company_name, job_title=job_title, research_snippets=research_snippets)
 
-    completion = client.chat.completions.create(
-        model=config.GROQ_MODEL,
+    return call_groq_completion(
         messages=[{"role": "user", "content": prompt}]
     )
-    return completion.choices[0].message.content

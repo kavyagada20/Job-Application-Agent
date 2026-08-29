@@ -1,9 +1,6 @@
 import json
 import os
-from groq import Groq
-import config
-
-client = Groq(api_key=config.GROQ_API_KEY)
+from tools.groq_helper import call_groq_completion
 
 def tailor_resume(context):
     """Tailor the resume with improved summarization accuracy."""
@@ -30,13 +27,10 @@ def tailor_resume(context):
         responsibilities=responsibilities
     ) + instruction_overlay
 
-    completion = client.chat.completions.create(
-        model=config.GROQ_MODEL,
+    return call_groq_completion(
         messages=[
             {"role": "system", "content": "You are an expert career coach and professional resume writer."},
             {"role": "user", "content": prompt}
         ],
         temperature=0.7
     )
-    
-    return completion.choices[0].message.content
