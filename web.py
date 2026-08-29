@@ -2,6 +2,8 @@ from flask import Flask, request, render_template, send_file, jsonify
 import os
 import tempfile
 import traceback
+from concurrent.futures import ThreadPoolExecutor
+
 from agents.parser import parse_resume_and_jd
 from agents.researcher import research_company
 from agents.resume_tailor import tailor_resume
@@ -34,7 +36,7 @@ def process():
         resume_path = os.path.join(temp_dir, resume_file.filename)
         resume_file.save(resume_path)
 
-        # Step 1: Parse
+        # Step 1: Parse (Extract structure from Resume & JD)
         context = parse_resume_and_jd(resume_path, jd_input)
         
         jd_info = context.get('job_description', {})
@@ -44,26 +46,25 @@ def process():
         experience_requirements = jd_info.get('experience_requirements', 'Not specified')
         salary_range = jd_info.get('salary_range', 'Not specified')
 
-        # Step 2: Research Company
+        # Step 2: Fast Company Research
         context['company_brief'] = research_company(company_name, job_title)
         
-        # Step 3: Tailor Resume
-        context['tailored_resume'] = tailor_resume(context)
-        
-        # Step 4: Cover Letter
-        context['cover_letter'] = write_cover_letter(context)
-        
-        # Step 5: Fit Analysis & Match Score
-        fit_result = analyze_job_fit(context)
-        context['fit_analysis'] = fit_result
+        # Step 3: Run Remaining 5 AI Agents in Parallel to complete in ~10s total
+        with ThreadPoolExecutor(max_workers=5) as executor:
+            future_tailor = executor.submit(tailor_resume, context)
+            future_cover = executor.submit(write_cover_letter, context)
+            future_fit = executor.submit(analyze_job_fit, context)
+            future_prep = executor.submit(generate_interview_prep, context)
+            future_email = executor.submit(generate_cold_email, context)
 
-        # Step 6: Interview Prep
-        context['interview_prep'] = generate_interview_prep(context)
+            context['tailored_resume'] = future_tailor.result()
+            context['cover_letter'] = future_cover.result()
+            fit_result = future_fit.result()
+            context['fit_analysis'] = fit_result
+            context['interview_prep'] = future_prep.result()
+            context['cold_email'] = future_email.result()
 
-        # Step 7: Recruiter Cold Email
-        context['cold_email'] = generate_cold_email(context)
-        
-        # Step 8: Package DOCX and ZIP archive
+        # Step 4: Package DOCX and ZIP archive
         package_outputs(context)
 
         # Cleanup temp file
