@@ -80,6 +80,11 @@ document.getElementById('applicationForm').addEventListener('submit', async func
                 body: formData
             });
 
+            const contentType = response.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                throw new Error(`Server returned non-JSON response (${response.status}). The request may have timed out. Please try again.`);
+            }
+
             const data = await response.json();
 
             if (!response.ok) {
@@ -90,7 +95,7 @@ document.getElementById('applicationForm').addEventListener('submit', async func
 
         } catch (error) {
             if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                throw new Error("Network connection interrupted. Please verify the Flask server is running and try again.");
+                throw new Error("Network connection interrupted. Please verify the server is active and try again.");
             }
             throw error;
         }
