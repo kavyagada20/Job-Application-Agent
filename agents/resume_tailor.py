@@ -1,4 +1,5 @@
 import json
+import os
 from groq import Groq
 import config
 
@@ -6,38 +7,36 @@ client = Groq(api_key=config.GROQ_API_KEY)
 
 def tailor_resume(context):
     """Tailor the resume with improved summarization accuracy."""
-    # Convert structured data to strings
-    resume_json = json.dumps(context['resume'], indent=2)
-    keywords = ', '.join(context['job_description']['keywords'])
-    required_skills = ', '.join(context['job_description']['required_skills'])
-    responsibilities = '; '.join(context['job_description']['responsibilities'])
+    resume_json = json.dumps(context.get('resume', {}), indent=2)
+    keywords = ', '.join(context.get('job_description', {}).get('keywords', []))
+    required_skills = ', '.join(context.get('job_description', {}).get('required_skills', []))
+    responsibilities = '; '.join(context.get('job_description', {}).get('responsibilities', []))
 
-    with open('prompts/tailor_prompt.txt', 'r') as f:
+    prompt_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'prompts', 'tailor_prompt.txt')
+    with open(prompt_path, 'r', encoding='utf-8') as f:
         prompt_template = f.read()
 
-    # We add a specific instruction for the summary to be more descriptive
     instruction_overlay = (
         "\nCRITICAL: The 'Summary' section must be a professional narrative (3-4 sentences) "
         "highlighting specific years of experience and top technical achievements found in the resume."
     )
 
     prompt = prompt_template.format(
-        job_title=context['job_description']['job_title'],
-        company_name=context['job_description']['company_name'],
+        job_title=context.get('job_description', {}).get('job_title', 'Role'),
+        company_name=context.get('job_description', {}).get('company_name', 'Company'),
         resume_text=resume_json,
         keywords=keywords,
         required_skills=required_skills,
         responsibilities=responsibilities
     ) + instruction_overlay
 
-    # Call Groq
     completion = client.chat.completions.create(
         model=config.GROQ_MODEL,
         messages=[
             {"role": "system", "content": "You are an expert career coach and professional resume writer."},
             {"role": "user", "content": prompt}
         ],
-        temperature=0.7 # Slight temperature increase helps for creative summary writing
+        temperature=0.7
     )
     
     return completion.choices[0].message.content

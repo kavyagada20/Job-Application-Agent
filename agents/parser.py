@@ -1,4 +1,5 @@
 import json
+import os
 import re
 from groq import Groq
 import config
@@ -23,7 +24,8 @@ def parse_resume_and_jd(resume_path, jd_input):
     jd_text = re.sub(r'\s+', ' ', jd_text).strip()
 
     # 3. Groq Extraction Pass
-    with open('prompts/parse_prompt.txt', 'r', encoding='utf-8') as f:
+    prompt_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'prompts', 'parse_prompt.txt')
+    with open(prompt_path, 'r', encoding='utf-8') as f:
         prompt_template = f.read()
 
     prompt = prompt_template.format(resume_text=resume_text, jd_text=jd_text)
