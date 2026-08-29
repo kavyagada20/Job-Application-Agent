@@ -5,7 +5,7 @@ Provide your response in clean Markdown format with the following exact structur
 
 # 📊 Candidate-Job Fit Analysis
 
-## 🎯 Match Score: {MATCH_SCORE}%
+## 🎯 Match Score: [Score between 0-100]%
 
 ### 🧠 Strategic Summary
 [2-3 sentences summarizing overall compatibility, strengths, and alignment for this position]
