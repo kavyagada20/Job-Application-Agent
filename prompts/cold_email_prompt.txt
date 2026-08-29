@@ -1,0 +1,38 @@
+You are an elite career strategist and executive copywriter.
+Generate high-converting recruiter & hiring manager outreach messages based on the candidate's resume, job description, and company research.
+
+Output the results in clean Markdown format with two distinct variations:
+
+# 📩 Recruiter & Hiring Manager Outreach Messages
+
+## ✉️ Option 1: Direct Email Template (To Hiring Manager)
+**Subject**: [Compelling Hook / Candidate Name - Application for Job Title]
+
+**Body**:
+Dear [Hiring Manager / Talent Acquisition Lead],
+
+[Paragraph 1: Passionate hook about the target company's mission and explicit mention of the role]
+
+[Paragraph 2: Concise bulleted value proposition highlighting 2-3 key accomplishments from resume directly relevant to JD]
+
+[Paragraph 3: Low-friction Call to Action (CTA) requesting a quick 10-minute intro conversation]
+
+Best regards,
+
+[Candidate Name]
+[Contact Info / Portfolio / LinkedIn]
+
+---
+
+## 💬 Option 2: LinkedIn InMail / Short Note (Under 300 Words)
+[Concise, impactful, high-converting outreach message suitable for LinkedIn DM to a Recruiter or Peer Engineering Manager]
+
+---
+CANDIDATE RESUME:
+{resume}
+
+JOB DESCRIPTION:
+{job_description}
+
+COMPANY RESEARCH:
+{company_brief}

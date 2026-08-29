@@ -7,6 +7,8 @@ from agents.researcher import research_company
 from agents.resume_tailor import tailor_resume
 from agents.cover_letter import write_cover_letter
 from agents.interview_prep import generate_interview_prep
+from agents.fit_analyzer import analyze_job_fit
+from agents.cold_email import generate_cold_email
 from agents.packager import package_outputs
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
@@ -42,7 +44,7 @@ def process():
         experience_requirements = jd_info.get('experience_requirements', 'Not specified')
         salary_range = jd_info.get('salary_range', 'Not specified')
 
-        # Step 2: Research
+        # Step 2: Research Company
         context['company_brief'] = research_company(company_name, job_title)
         
         # Step 3: Tailor Resume
@@ -51,10 +53,17 @@ def process():
         # Step 4: Cover Letter
         context['cover_letter'] = write_cover_letter(context)
         
-        # Step 5: Interview Prep
+        # Step 5: Fit Analysis & Match Score
+        fit_result = analyze_job_fit(context)
+        context['fit_analysis'] = fit_result
+
+        # Step 6: Interview Prep
         context['interview_prep'] = generate_interview_prep(context)
+
+        # Step 7: Recruiter Cold Email
+        context['cold_email'] = generate_cold_email(context)
         
-        # Step 6: Package DOCX
+        # Step 8: Package DOCX and ZIP archive
         package_outputs(context)
 
         # Cleanup temp file
@@ -69,6 +78,9 @@ def process():
             'tailored_resume': context['tailored_resume'],
             'cover_letter': context['cover_letter'],
             'interview_prep': context['interview_prep'],
+            'fit_score': fit_result['score'],
+            'fit_report': fit_result['report'],
+            'cold_email': context['cold_email'],
             'company_name': company_name,
             'job_title': job_title,
             'location': location,
@@ -90,4 +102,5 @@ def download(filename):
         return jsonify({'error': f'File {filename} not found.'}), 404
 
 if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False, port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port, debug=False)

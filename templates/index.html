@@ -24,9 +24,9 @@
     <div class="container">
         <!-- Header Section -->
         <header class="app-header">
-            <div class="badge"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Multi-Agent Platform</div>
+            <div class="badge"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Multi-Agent Career Suite</div>
             <h1>AI Career Agent</h1>
-            <p class="subtitle">Research companies, tailor resumes, write bespoke cover letters, and generate STAR interview prep in seconds.</p>
+            <p class="subtitle">Analyze candidate-job fit, research companies, tailor resumes, write cover letters, generate recruiter cold emails, and master STAR interview prep.</p>
         </header>
 
         <!-- Main Input Form Interface -->
@@ -49,7 +49,7 @@
                     <!-- Job Details Section -->
                     <div class="form-section">
                         <label class="section-label"><i class="fa-solid fa-briefcase"></i> 2. Target Job Description</label>
-                        <textarea id="jd_text" name="jd_text" placeholder="Paste the Job Description text or a URL here..." required></textarea>
+                        <textarea id="jd_text" name="jd_text" placeholder="Paste the Job Description text or a Posting URL here..." required></textarea>
                     </div>
                 </div>
 
@@ -65,7 +65,7 @@
                 <div class="spinner-ring"></div>
                 <div class="spinner-icon"><i class="fa-solid fa-brain"></i></div>
             </div>
-            <h2 id="status-text">Agents are researching company culture...</h2>
+            <h2 id="status-text">Analyzing Candidate-Job Compatibility & Researching Company...</h2>
             <p class="loading-subtext">Executing Multi-Agent Orchestration Workflow</p>
             
             <div class="progress-bar-container">
@@ -78,20 +78,27 @@
             <!-- Action Download Header -->
             <div class="action-banner glass-card">
                 <div class="action-info">
-                    <h3 id="targetCompanyTitle"><i class="fa-solid fa-building"></i> Application Package Ready</h3>
+                    <div class="banner-title-group">
+                        <h3 id="targetCompanyTitle"><i class="fa-solid fa-building"></i> Application Package Ready</h3>
+                        <div id="fitScoreBadge" class="score-badge">Match: --%</div>
+                    </div>
                     <div id="jobMetadataBadges" class="metadata-badges"></div>
                 </div>
                 <div class="download-group">
-                    <a id="dl-resume" href="#" class="btn-dl btn-dl-resume"><i class="fa-solid fa-file-word"></i> Resume (.docx)</a>
-                    <a id="dl-cover" href="#" class="btn-dl btn-dl-cover"><i class="fa-solid fa-envelope-open-text"></i> Cover Letter (.docx)</a>
-                    <a id="dl-prep" href="#" class="btn-dl btn-dl-prep"><i class="fa-solid fa-graduation-cap"></i> Prep Guide (.docx)</a>
+                    <a id="dl-zip" href="#" class="btn-dl btn-dl-zip"><i class="fa-solid fa-file-zipper"></i> Download All (.zip)</a>
+                    <a id="dl-resume" href="#" class="btn-dl btn-dl-resume"><i class="fa-solid fa-file-word"></i> Resume</a>
+                    <a id="dl-cover" href="#" class="btn-dl btn-dl-cover"><i class="fa-solid fa-envelope-open-text"></i> Cover Letter</a>
+                    <a id="dl-prep" href="#" class="btn-dl btn-dl-prep"><i class="fa-solid fa-graduation-cap"></i> Prep Guide</a>
                 </div>
             </div>
 
             <!-- Tabbed Navigation Bar -->
             <div class="tab-navigation">
-                <button class="tab-btn active" onclick="switchTab('tab-brief', this)">
-                    <i class="fa-solid fa-chart-pie"></i> Company Research
+                <button class="tab-btn active" onclick="switchTab('tab-fit', this)">
+                    <i class="fa-solid fa-chart-pie"></i> 📊 Fit Analysis
+                </button>
+                <button class="tab-btn" onclick="switchTab('tab-brief', this)">
+                    <i class="fa-solid fa-building-columns"></i> Company Intelligence
                 </button>
                 <button class="tab-btn" onclick="switchTab('tab-resume', this)">
                     <i class="fa-solid fa-user-tie"></i> Tailored Resume
@@ -100,14 +107,26 @@
                     <i class="fa-solid fa-paper-plane"></i> Cover Letter
                 </button>
                 <button class="tab-btn" onclick="switchTab('tab-prep', this)">
-                    <i class="fa-solid fa-bullseye"></i> 🎯 STAR Interview Prep
+                    <i class="fa-solid fa-bullseye"></i> STAR Interview Prep
+                </button>
+                <button class="tab-btn" onclick="switchTab('tab-cold', this)">
+                    <i class="fa-solid fa-envelope"></i> Recruiter Cold Email
                 </button>
             </div>
 
             <!-- Tab Content Viewers -->
             <div class="glass-card tab-content-card">
+                <!-- Fit Analysis Tab -->
+                <div id="tab-fit" class="tab-pane active">
+                    <div class="pane-header">
+                        <h4><i class="fa-solid fa-chart-line"></i> Candidate-Job Match & Gap Scorecard</h4>
+                        <button class="btn-copy" onclick="copyContent('fitReport')"><i class="fa-regular fa-copy"></i> Copy Report</button>
+                    </div>
+                    <div id="fitReport" class="markdown-body"></div>
+                </div>
+
                 <!-- Company Brief Tab -->
-                <div id="tab-brief" class="tab-pane active">
+                <div id="tab-brief" class="tab-pane">
                     <div class="pane-header">
                         <h4><i class="fa-solid fa-building-columns"></i> Company & Industry Intelligence</h4>
                         <button class="btn-copy" onclick="copyContent('companyBrief')"><i class="fa-regular fa-copy"></i> Copy Text</button>
@@ -140,6 +159,15 @@
                         <button class="btn-copy" onclick="copyContent('interviewPrep')"><i class="fa-regular fa-copy"></i> Copy Guide</button>
                     </div>
                     <div id="interviewPrep" class="markdown-body"></div>
+                </div>
+
+                <!-- Cold Email Tab -->
+                <div id="tab-cold" class="tab-pane">
+                    <div class="pane-header">
+                        <h4><i class="fa-solid fa-paper-plane"></i> Recruiter & Hiring Manager Outreach Messaging</h4>
+                        <button class="btn-copy" onclick="copyContent('coldEmail')"><i class="fa-regular fa-copy"></i> Copy Outreach</button>
+                    </div>
+                    <div id="coldEmail" class="markdown-body"></div>
                 </div>
             </div>
 

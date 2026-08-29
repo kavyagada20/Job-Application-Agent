@@ -9,21 +9,17 @@ if (window.marked) {
 
 // Global Tab Switching
 function switchTab(tabId, btnElement) {
-    // Hide all tab panes
     const panes = document.querySelectorAll('.tab-pane');
     panes.forEach(pane => pane.classList.remove('active'));
 
-    // Deactivate all tab buttons
     const buttons = document.querySelectorAll('.tab-btn');
     buttons.forEach(btn => btn.classList.remove('active'));
 
-    // Show target tab pane
     const targetPane = document.getElementById(tabId);
     if (targetPane) {
         targetPane.classList.add('active');
     }
 
-    // Activate button
     if (btnElement) {
         btnElement.classList.add('active');
     }
@@ -34,7 +30,6 @@ function copyContent(elementId) {
     const element = document.getElementById(elementId);
     if (!element) return;
 
-    // Use textContent or innerText to copy raw formatted text
     const textToCopy = element.innerText || element.textContent;
     navigator.clipboard.writeText(textToCopy).then(() => {
         alert("Copied to clipboard!");
@@ -54,16 +49,17 @@ document.getElementById('applicationForm').addEventListener('submit', async func
     const statusText = document.getElementById('status-text');
     const progressFill = document.getElementById('progressFill');
 
-    // UI State Transition
     mainUI.style.display = 'none';
     loading.style.display = 'block';
 
     const steps = [
-        "Parsing your resume document...",
-        "Researching company culture & tech stack...",
-        "Tailoring experience bullet points...",
+        "Parsing resume document...",
+        "Analyzing candidate-job compatibility & score...",
+        "Researching target company intelligence...",
+        "Tailoring experience bullets & skills...",
         "Drafting customized cover letter...",
-        "Generating STAR behavioral & technical interview prep..."
+        "Generating STAR behavioral & technical prep...",
+        "Writing recruiter & hiring manager cold email..."
     ];
     let stepIdx = 0;
     progressFill.style.width = '15%';
@@ -71,11 +67,11 @@ document.getElementById('applicationForm').addEventListener('submit', async func
     const interval = setInterval(() => {
         if (stepIdx < steps.length) {
             statusText.innerText = steps[stepIdx];
-            const pct = Math.min(20 + (stepIdx + 1) * 16, 95);
+            const pct = Math.min(15 + (stepIdx + 1) * 12, 95);
             progressFill.style.width = pct + '%';
             stepIdx++;
         }
-    }, 4000);
+    }, 3500);
 
     async function processApplication() {
         try {
@@ -105,16 +101,37 @@ document.getElementById('applicationForm').addEventListener('submit', async func
         clearInterval(interval);
         progressFill.style.width = '100%';
 
-        // Render Parsed Markdown into formatted HTML
         const renderMarkdown = (text) => {
             if (!text) return '<p class="text-muted">No content generated.</p>';
             return window.marked ? marked.parse(text) : text.replace(/\n/g, '<br>');
         };
 
+        // Render contents into tabs
+        document.getElementById('fitReport').innerHTML = renderMarkdown(data.fit_report);
         document.getElementById('companyBrief').innerHTML = renderMarkdown(data.company_brief);
         document.getElementById('tailoredResume').innerHTML = renderMarkdown(data.tailored_resume);
         document.getElementById('coverLetter').innerHTML = renderMarkdown(data.cover_letter);
         document.getElementById('interviewPrep').innerHTML = renderMarkdown(data.interview_prep);
+        document.getElementById('coldEmail').innerHTML = renderMarkdown(data.cold_email);
+
+        // Update Match Score Badge
+        const scoreBadge = document.getElementById('fitScoreBadge');
+        if (scoreBadge && data.fit_score !== undefined) {
+            scoreBadge.innerText = `Match Score: ${data.fit_score}%`;
+            if (data.fit_score >= 80) {
+                scoreBadge.style.background = 'rgba(16, 185, 129, 0.2)';
+                scoreBadge.style.borderColor = '#10b981';
+                scoreBadge.style.color = '#34d399';
+            } else if (data.fit_score >= 65) {
+                scoreBadge.style.background = 'rgba(245, 158, 11, 0.2)';
+                scoreBadge.style.borderColor = '#f59e0b';
+                scoreBadge.style.color = '#fbbf24';
+            } else {
+                scoreBadge.style.background = 'rgba(239, 68, 68, 0.2)';
+                scoreBadge.style.borderColor = '#ef4444';
+                scoreBadge.style.color = '#f87171';
+            }
+        }
 
         // Update Title Header & Metadata Badges
         const safeCompanyName = data.company_name ? data.company_name.replace(/\s+/g, '_') : 'Company';
@@ -138,6 +155,7 @@ document.getElementById('applicationForm').addEventListener('submit', async func
         }
 
         // Set Download Links
+        document.getElementById('dl-zip').href = `/download/Job_Application_Package_${safeCompanyName}.zip`;
         document.getElementById('dl-resume').href = `/download/tailored_resume_${safeCompanyName}.docx`;
         document.getElementById('dl-cover').href = `/download/cover_letter_${safeCompanyName}.docx`;
         

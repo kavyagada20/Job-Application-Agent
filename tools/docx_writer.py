@@ -79,3 +79,55 @@ def create_interview_prep_docx(content, filename):
             doc.add_paragraph(stripped)
 
     doc.save(filename)
+
+def create_fit_analysis_docx(content, filename):
+    """Create a .docx file for the Candidate-Job Fit Analysis."""
+    doc = Document()
+    style = doc.styles['Normal']
+    font = style.font
+    font.name = 'Calibri'
+    font.size = Pt(11)
+
+    lines = content.split('\n')
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith('# '):
+            doc.add_heading(stripped[2:], level=1)
+        elif stripped.startswith('## '):
+            doc.add_heading(stripped[3:], level=2)
+        elif stripped.startswith('### '):
+            doc.add_heading(stripped[4:], level=3)
+        elif stripped.startswith('- ') or stripped.startswith('* '):
+            doc.add_paragraph(stripped[2:], style='List Bullet')
+        else:
+            doc.add_paragraph(stripped)
+
+    doc.save(filename)
+
+def create_cold_email_docx(content, filename):
+    """Create a .docx file for Recruiter & Hiring Manager Cold Email templates."""
+    doc = Document()
+    style = doc.styles['Normal']
+    font = style.font
+    font.name = 'Calibri'
+    font.size = Pt(11)
+
+    lines = content.split('\n')
+    for line in lines:
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if stripped.startswith('# '):
+            doc.add_heading(stripped[2:], level=1)
+        elif stripped.startswith('## '):
+            doc.add_heading(stripped[3:], level=2)
+        elif stripped.startswith('### '):
+            doc.add_heading(stripped[4:], level=3)
+        elif stripped.startswith('- ') or stripped.startswith('* '):
+            doc.add_paragraph(stripped[2:], style='List Bullet')
+        else:
+            doc.add_paragraph(stripped)
+
+    doc.save(filename)
