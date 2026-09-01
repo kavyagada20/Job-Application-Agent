@@ -1,0 +1,10 @@
+Key Responsibilities Model Development: Build, train, and deploy machine learning models (classification, regression, time-series forecasting, and optimization).
+Generative AI & NLP:
+ Develop natural language processing (NLP) applications, prompt engineering solutions, and retrieval-augmented generation (RAG) architectures.Data Pipelines: Write 
+efficient code to clean, process, and analyze large datasets using cloud and big data infrastructure.
+Collaboration: Work with business consultants, engineering teams, and client stakeholders to translate business problems into technical AI solutions.Core Requirements
+ & SkillsEducation:
+ Bachelor's or Master's degree in Computer Science, Statistics, Mathematics, Data Science, or a related quantitative field.Experience: 3 to 8+ years of hands-on data 
+science experience depending on the level (Engineer I/II/III).Programming: Strong proficiency in Python, SQL, and familiarity with PySpark or R.
+AI/ML Frameworks: Experience with TensorFlow, PyTorch, Scikit-learn, and cloud platforms like Microsoft Azure Databricks or AWS.
+Tools: Git, Docker,and visualization platforms like Tableau or PowerBI

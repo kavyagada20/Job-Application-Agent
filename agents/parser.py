@@ -32,7 +32,28 @@ def parse_resume_and_jd(resume_path, jd_input):
         response_format={"type": "json_object"}
     )
     
-    result = json.loads(raw_response)
+    # Strip markdown code fences if present
+    clean_response = raw_response.strip()
+    if clean_response.startswith("```"):
+        clean_response = re.sub(r'^```(?:json)?\s*', '', clean_response, flags=re.IGNORECASE)
+        clean_response = re.sub(r'\s*```$', '', clean_response)
+    
+    try:
+        result = json.loads(clean_response)
+    except Exception as e:
+        print(f"JSON decode failed, attempting regex cleanup: {e}")
+        match = re.search(r'\{.*\}', clean_response, re.DOTALL)
+        if match:
+            result = json.loads(match.group(0))
+        else:
+            raise e
+
+    if not isinstance(result, dict):
+        result = {}
+    if 'job_description' not in result or not isinstance(result['job_description'], dict):
+        result['job_description'] = {}
+    if 'resume' not in result or not isinstance(result['resume'], dict):
+        result['resume'] = {}
 
     current_company = result.get('job_description', {}).get('company_name', '').lower()
     if not current_company or any(x in current_company for x in ['unknown', 'string', 'company name']):

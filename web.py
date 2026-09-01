@@ -49,8 +49,8 @@ def process():
         # Step 2: Fast Company Research
         context['company_brief'] = research_company(company_name, job_title)
         
-        # Step 3: Run Remaining 5 AI Agents in Parallel to complete in ~10s total
-        with ThreadPoolExecutor(max_workers=5) as executor:
+        # Step 3: Run Remaining 5 AI Agents with throttled pool (max_workers=2) to manage TPM limits smoothly
+        with ThreadPoolExecutor(max_workers=2) as executor:
             future_tailor = executor.submit(tailor_resume, context)
             future_cover = executor.submit(write_cover_letter, context)
             future_fit = executor.submit(analyze_job_fit, context)
@@ -96,11 +96,12 @@ def process():
 
 @app.route('/download/<filename>')
 def download(filename):
-    file_path = os.path.join(OUTPUTS_DIR, filename)
+    safe_filename = os.path.basename(filename)
+    file_path = os.path.join(OUTPUTS_DIR, safe_filename)
     if os.path.exists(file_path):
         return send_file(file_path, as_attachment=True)
     else:
-        return jsonify({'error': f'File {filename} not found.'}), 404
+        return jsonify({'error': f'File {safe_filename} not found.'}), 404
 
 @app.errorhandler(500)
 def handle_internal_server_error(e):

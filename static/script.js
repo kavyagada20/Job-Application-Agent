@@ -53,25 +53,37 @@ document.getElementById('applicationForm').addEventListener('submit', async func
     loading.style.display = 'block';
 
     const steps = [
-        "Parsing resume document...",
-        "Analyzing candidate-job compatibility & score...",
-        "Researching target company intelligence...",
-        "Tailoring experience bullets & skills...",
-        "Drafting customized cover letter...",
-        "Generating STAR behavioral & technical prep...",
-        "Writing recruiter & hiring manager cold email..."
+        "Parsing resume document & job requirements...",
+        "Analyzing candidate-job compatibility & fit score...",
+        "Researching target company intelligence & web data...",
+        "Tailoring experience bullets & skills alignment...",
+        "Drafting customized narrative cover letter...",
+        "Generating STAR behavioral & technical interview prep...",
+        "Writing recruiter & hiring manager cold email...",
+        "Packaging Word (.docx) files & ZIP archive..."
     ];
     let stepIdx = 0;
-    progressFill.style.width = '15%';
+    let elapsedSeconds = 0;
+    progressFill.style.width = '10%';
+
+    const loadingSubtext = document.querySelector('.loading-subtext');
 
     const interval = setInterval(() => {
+        elapsedSeconds += 2;
         if (stepIdx < steps.length) {
             statusText.innerText = steps[stepIdx];
-            const pct = Math.min(15 + (stepIdx + 1) * 12, 95);
+            const pct = Math.min(10 + (stepIdx + 1) * 11, 95);
             progressFill.style.width = pct + '%';
             stepIdx++;
+        } else {
+            statusText.innerText = "Finalizing AI suite & building download packages...";
+            progressFill.style.width = '98%';
         }
-    }, 3500);
+
+        if (loadingSubtext) {
+            loadingSubtext.innerText = `Executing Multi-Agent Workflow (${elapsedSeconds}s elapsed)`;
+        }
+    }, 2000);
 
     async function processApplication() {
         try {

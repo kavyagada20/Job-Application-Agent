@@ -5,9 +5,15 @@ from tools.groq_helper import call_groq_completion
 def tailor_resume(context):
     """Tailor the resume with improved summarization accuracy."""
     resume_json = json.dumps(context.get('resume', {}), indent=2)
-    keywords = ', '.join(context.get('job_description', {}).get('keywords', []))
-    required_skills = ', '.join(context.get('job_description', {}).get('required_skills', []))
-    responsibilities = '; '.join(context.get('job_description', {}).get('responsibilities', []))
+    
+    kw_raw = context.get('job_description', {}).get('keywords', [])
+    keywords = ', '.join(kw_raw) if isinstance(kw_raw, list) else str(kw_raw or '')
+
+    req_raw = context.get('job_description', {}).get('required_skills', [])
+    required_skills = ', '.join(req_raw) if isinstance(req_raw, list) else str(req_raw or '')
+
+    resp_raw = context.get('job_description', {}).get('responsibilities', [])
+    responsibilities = '; '.join(resp_raw) if isinstance(resp_raw, list) else str(resp_raw or '')
 
     prompt_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'prompts', 'tailor_prompt.txt')
     with open(prompt_path, 'r', encoding='utf-8') as f:

@@ -1,4 +1,5 @@
 import os
+import re
 import zipfile
 from tools.docx_writer import (
     create_resume_docx, 
@@ -11,7 +12,8 @@ from tools.docx_writer import (
 
 def package_outputs(context):
     """Package the outputs into .docx files and a single .zip archive."""
-    company_name = context['job_description'].get('company_name', 'Company').replace(' ', '_')
+    raw_company = context.get('job_description', {}).get('company_name', 'Company')
+    company_name = re.sub(r'[^\w\-]', '_', str(raw_company)).strip('_') or 'Company'
     
     outputs_dir = 'outputs'
     if not os.path.exists(outputs_dir):

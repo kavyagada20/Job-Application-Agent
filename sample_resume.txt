@@ -1,17 +1,41 @@
-John Doe
-john.doe@email.com
-
-Skills: Python, Machine Learning, Data Analysis, SQL
-
-Experience:
-Software Engineer at TechCorp
-2020-2023
-- Developed ML models using Python
-- Built data pipelines with SQL
-- Collaborated on cross-functional teams
-
-Education:
-BS Computer Science, University of Example, 2020
-
-Certifications:
-AWS Certified Developer
+First Last
+City, State, Country | first.last@email.com | +91 98765 43210 | linkedin.com/in/your-handle
+github.com/your-github
+Experience
+Full-Stack Developer Intern - TechNova Solutions Pvt. Ltd., Remote Jun 2025 – Present
+• Built and maintained a production-ready CRM platform for sales tracking.
+• Designed scalable backend APIs and relational data models to support lead pipelines, contact management, and
+activity logging with role-based access control.
+Software Engineering Intern - FinEdge Markets Ltd., Mumbai, India Jan 2025 – May 2025
+• Contributed to a fintech web portal and Android app, implementing UI components, API integrations, and form
+validation for trading workflows.
+• Participated in code reviews, bug triage, and sprint ceremonies following Agile practices (Scrum, Jira) with a
+cross-functional team.
+Education
+BTech in Artificial Intelligence and Machine Learning
+Dwarkadas J. Sanghvi College of Engineering
+Aug 2023 – Present
+CGPA: 9.2 / 10.0 (through Semester 4)
+Skills
+Programming Languages: Python, JavaScript, TypeScript, C++, Java
+Web Development: React.js, Next.js, Node.js, Express.js, RESTful APIs, HTML5, CSS3, Tailwind CSS
+Backend & Databases: Django, Django REST Framework, Node.js, PostgreSQL, MySQL, MongoDB, Redis
+AI & ML: Supervised and unsupervised learning, model training & evaluation
+Tools & Platforms: Git, GitHub, Docker, Linux, Postman, Android Studio, VS Code, Jupyter Notebook, Figma, Jira
+Projects
+SalesFlow CRM Platform
+• End-to-end CRM web application to manage sales pipelines, client records, and team activities with role-based
+permissions and analytics dashboards.
+Tools: Next.js, Django REST Framework, PostgreSQL, Tailwind CSS, Chart.js
+TaskBoard - Kanban Task Manager
+• Built a Kanban-style task management web app supporting boards, lists, and drag-and-drop tasks for personal
+productivity and small teams.
+Tools: MongoDB, Express.js, React.js, Node.js (MERN), Headless UI, Tailwind CSS
+QuizArena - Real-time Multiplayer Quiz Platform
+• Real-time web application where hosts create rooms and players join via code to participate in live quizzes with
+scoreboards. Tools: React.js, Socket.io, Node.js, Express.js, MongoDB, Tailwind CSS
+Co-curricular Activities
+• Internship & Placement Coordinator • Marketing Lead, University Aero Club
+Awards and Achievements
+Winner, Hackathon , GlobalCode Hackathon Jan 2025
+Winner, Hackathon , GlobalCode Hackathon Jan 2025
