@@ -9,5 +9,5 @@ TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "")
 if not GROQ_API_KEY:
     raise ValueError("Please set a valid GROQ_API_KEY in your environment or .env file")
 
-# High-capacity active model on Groq
-GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
+# Fast, high-capacity active model on Groq (sub-2s responses)
+GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-20b")

@@ -49,8 +49,8 @@ def process():
         # Step 2: Fast Company Research
         context['company_brief'] = research_company(company_name, job_title)
         
-        # Step 3: Run Remaining 5 AI Agents with throttled pool (max_workers=2) to manage TPM limits smoothly
-        with ThreadPoolExecutor(max_workers=2) as executor:
+        # Step 3: Run Remaining 5 AI Agents in parallel for fast response (< 10 seconds)
+        with ThreadPoolExecutor(max_workers=5) as executor:
             future_tailor = executor.submit(tailor_resume, context)
             future_cover = executor.submit(write_cover_letter, context)
             future_fit = executor.submit(analyze_job_fit, context)

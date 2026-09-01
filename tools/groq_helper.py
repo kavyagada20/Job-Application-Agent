@@ -26,7 +26,8 @@ def call_groq_completion(messages, model=None, response_format=None, max_retries
                 kwargs = {
                     "model": current_model,
                     "messages": messages,
-                    "temperature": temperature
+                    "temperature": temperature,
+                    "max_completion_tokens": 1500
                 }
                 if response_format:
                     kwargs["response_format"] = response_format
