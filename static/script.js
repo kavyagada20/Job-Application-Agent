@@ -97,17 +97,31 @@ document.getElementById('applicationForm').addEventListener('submit', async func
                 throw new Error(`Server returned non-JSON response (${response.status}). The request may have timed out. Please try again.`);
             }
 
-            const data = await response.json();
+            const data = await response.json().catch(() => null);
 
-            if (!response.ok) {
-                throw new Error(data.error || `Server Error (${response.status})`);
+            if (!response.ok || !data) {
+                const friendlyMsg = data?.error || (response.status === 429 
+                    ? "Service Busy: Rate limit reached. Please wait a few seconds."
+                    : response.status === 502 || response.status === 503
+                    ? "AI Service Temporarily Unavailable: The backend provider is under heavy load."
+                    : response.status === 401 || response.status === 403
+                    ? "Access Denied: API key configuration or scope permission error."
+                    : "Application Processing Notice: The request timed out or encountered a delay.");
+                const friendlyHint = data?.hint || "Please click Try Again to retry your application.";
+                
+                const err = new Error(friendlyMsg);
+                err.code = data?.code || response.status;
+                err.hint = friendlyHint;
+                throw err;
             }
 
             return data;
 
         } catch (error) {
             if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                throw new Error("Network connection interrupted. Please verify the server is active and try again.");
+                const netErr = new Error("Network Timeout: Connection to server interrupted.");
+                netErr.hint = "Please verify your internet connection and try submitting again.";
+                throw netErr;
             }
             throw error;
         }
@@ -187,10 +201,40 @@ document.getElementById('applicationForm').addEventListener('submit', async func
 
     } catch (error) {
         clearInterval(interval);
-        alert("Application Processing Error: " + error.message);
         mainUI.style.display = 'block';
         loading.style.display = 'none';
+
+        const title = error.code ? `Notice (${error.code})` : "Application Service Notice";
+        const cleanMsg = error.message ? error.message.replace(/^Error:\s*/i, '') : "Processing encountered a temporary delay.";
+        const cleanHint = error.hint || "Please click Try Again to re-submit your request.";
+
+        showErrorModal(title, cleanMsg, cleanHint);
     }
+});
+
+// Friendly Error Modal Dialog Functions (No raw stack traces)
+function showErrorModal(title, message, hint) {
+    const modal = document.getElementById('errorModal');
+    const titleEl = document.getElementById('errorTitle');
+    const msgEl = document.getElementById('errorMessage');
+    const hintEl = document.getElementById('errorHintText');
+
+    if (titleEl) titleEl.innerText = title || "Application Notice";
+    if (msgEl) msgEl.innerText = message || "Processing encountered a temporary delay.";
+    if (hintEl) hintEl.innerText = hint || "Please click Try Again to resume.";
+
+    if (modal) modal.style.display = 'flex';
+}
+
+function dismissErrorModal() {
+    const modal = document.getElementById('errorModal');
+    const mainUI = document.getElementById('main-interface');
+    const loading = document.getElementById('loading');
+
+    if (modal) modal.style.display = 'none';
+    if (loading) loading.style.display = 'none';
+    if (mainUI) mainUI.style.display = 'block';
+}
 });
 
 // File Upload Drag & Drop Feedback

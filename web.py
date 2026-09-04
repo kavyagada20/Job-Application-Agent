@@ -12,6 +12,7 @@ from agents.interview_prep import generate_interview_prep
 from agents.fit_analyzer import analyze_job_fit
 from agents.cold_email import generate_cold_email
 from agents.packager import package_outputs
+from tools.groq_helper import FriendlyAPIException, map_error_to_friendly_exception
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
@@ -108,9 +109,14 @@ def process():
         })
 
     except Exception as e:
-        print("!!! Error processing application !!!")
+        print("Backend Processing Exception Captured:")
         traceback.print_exc()
-        return jsonify({'error': f"Processing failed: {str(e)}"}), 500
+        friendly = map_error_to_friendly_exception(e)
+        return jsonify({
+            'error': friendly.message,
+            'code': friendly.code,
+            'hint': friendly.hint
+        }), friendly.code
 
 @app.route('/download/<filename>')
 def download(filename):
@@ -119,11 +125,77 @@ def download(filename):
     if os.path.exists(file_path):
         return send_file(file_path, as_attachment=True)
     else:
-        return jsonify({'error': f'File {safe_filename} not found.'}), 404
+        return jsonify({
+            'error': f'The requested file ({safe_filename}) is no longer available.',
+            'code': 404,
+            'hint': 'Please generate a new application suite to create updated documents.'
+        }), 404
+
+# Comprehensive Friendly Flask Error Handlers (No raw stack traces)
+@app.errorhandler(400)
+def handle_bad_request(e):
+    return jsonify({
+        'error': 'Invalid Application Input: Please select a valid resume document and enter a job description.',
+        'code': 400,
+        'hint': 'Upload a PDF, DOCX, or TXT resume file.'
+    }), 400
+
+@app.errorhandler(401)
+def handle_unauthorized(e):
+    return jsonify({
+        'error': 'API Authentication Failed: Invalid or missing API key.',
+        'code': 401,
+        'hint': 'Check that your GROQ_API_KEY environment setting is valid.'
+    }), 401
+
+@app.errorhandler(403)
+def handle_forbidden(e):
+    return jsonify({
+        'error': 'Access Denied: Insufficient API scope or model permission.',
+        'code': 403,
+        'hint': 'Verify model scope and API key permissions.'
+    }), 403
+
+@app.errorhandler(404)
+def handle_not_found(e):
+    return jsonify({
+        'error': 'Resource Not Found: The requested endpoint or document does not exist.',
+        'code': 404,
+        'hint': 'Please return to the homepage and submit a new request.'
+    }), 404
+
+@app.errorhandler(422)
+def handle_unprocessable(e):
+    return jsonify({
+        'error': 'Unprocessable Entity: Unable to parse document contents.',
+        'code': 422,
+        'hint': 'Please verify your resume text is readable and not password-protected.'
+    }), 422
+
+@app.errorhandler(429)
+def handle_rate_limit(e):
+    return jsonify({
+        'error': 'Service Rate Limit Exceeded: AI service limit reached.',
+        'code': 429,
+        'hint': 'Please wait 10-15 seconds before trying again.'
+    }), 429
 
 @app.errorhandler(500)
 def handle_internal_server_error(e):
-    return jsonify({'error': f"Server Error: {str(e)}"}), 500
+    return jsonify({
+        'error': 'Application Service Notice: The server encountered a temporary processing delay.',
+        'code': 500,
+        'hint': 'Please try submitting your request again in a few moments.'
+    }), 500
+
+@app.errorhandler(502)
+@app.errorhandler(503)
+def handle_service_unavailable(e):
+    return jsonify({
+        'error': 'AI Service Temporarily Unavailable: The backend provider is currently experiencing high load.',
+        'code': 503,
+        'hint': 'Please wait a moment and click Try Again.'
+    }), 503
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
