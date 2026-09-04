@@ -4,13 +4,17 @@ from tools.groq_helper import call_groq_completion
 
 def analyze_job_fit(context):
     """Analyze candidate resume against JD and produce Match Score & gap breakdown."""
+    raw_resume = context.get('raw_resume', '')
+    resume_json = str(context.get('resume', ''))
+    resume_text = raw_resume if raw_resume and len(raw_resume) > 50 else resume_json
+
+    raw_jd = context.get('raw_jd', '')
+    jd_text = raw_jd if raw_jd and len(raw_jd) > 50 else str(context.get('job_description', ''))
+    company_brief = str(context.get('company_brief', ''))
+
     prompt_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'prompts', 'fit_analyzer_prompt.txt')
     with open(prompt_path, 'r', encoding='utf-8') as f:
         prompt_template = f.read()
-
-    resume_text = str(context.get('resume', ''))
-    jd_text = str(context.get('job_description', ''))
-    company_brief = str(context.get('company_brief', ''))
 
     prompt = prompt_template.format(
         resume=resume_text,
@@ -19,12 +23,14 @@ def analyze_job_fit(context):
     )
 
     analysis_text = call_groq_completion(
-        messages=[{"role": "user", "content": prompt}]
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.7
     )
 
     # Extract score percentage if present
     match = re.search(r'Match Score:\s*(\d+)%', analysis_text, re.IGNORECASE)
     score = int(match.group(1)) if match else 85
+    score = min(max(score, 50), 100)
 
     return {
         'score': score,

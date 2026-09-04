@@ -107,4 +107,9 @@ def parse_resume_and_jd(resume_path, jd_input):
         else:
             result['job_description']['company_name'] = 'Deloitte' if 'deloitte' in jd_text.lower() else 'Company'
 
+    result['raw_resume'] = resume_text
+    result['raw_jd'] = jd_text
+
+    return result
+
     return result
