@@ -80,7 +80,7 @@ def map_error_to_friendly_exception(e):
         hint="Please verify your input files and try again."
     )
 
-def call_groq_completion(messages, model=None, response_format=None, max_retries=5, temperature=0.7):
+def call_groq_completion(messages, model=None, response_format=None, max_retries=5, temperature=0.7, max_tokens=1500):
     """Call Groq API with automatic retry backoff, fallback models, and friendly exception mapping."""
     try:
         client = get_groq_client()
@@ -98,7 +98,7 @@ def call_groq_completion(messages, model=None, response_format=None, max_retries
                     "model": current_model,
                     "messages": messages,
                     "temperature": temperature,
-                    "max_completion_tokens": 1500
+                    "max_completion_tokens": max_tokens
                 }
                 if response_format:
                     kwargs["response_format"] = response_format

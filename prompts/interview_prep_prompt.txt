@@ -1,25 +1,28 @@
 You are an expert executive interview coach and technical recruiter.
 Based on the provided Candidate Resume, Job Description, and Company Research, generate a comprehensive Interview Preparation Guide.
 
-Output the guide in clean markdown format with 3 distinct sections:
+Output the guide in clean markdown format with 3 distinct sections using bullet lists (DO NOT use markdown tables):
 
 # 🎯 Interview Preparation Guide
 
 ## 1. 🌟 Behavioral Interview Questions (STAR Method)
 Generate 5 role-specific behavioral questions. For each question, provide a tailored STAR framework response strategy based on the candidate's actual resume accomplishments:
-- **Question**: [Behavioral Question]
+- **Question 1**: [Behavioral Question]
   - **Situation & Task**: [Context from candidate's past experience]
   - **Action**: [Key actions candidate took]
   - **Result**: [Quantifiable outcome or achievement]
 
 ## 2. 💻 Technical & System Design Q&A
-Extract key technologies and skill requirements from the Job Description & Company Research. Generate 5 technical/system design questions with clear, impressive sample answer key points:
-- **Question**: [Technical/System Design Question]
-  - **Key Talking Points**: [2-3 bullet points with candidate's actual tools/projects]
+Extract key technologies and skill requirements from the Job Description & Company Research. Generate 5 technical/system design questions with clear, impressive sample answer key points (Use clean bullet lists, DO NOT use Markdown tables):
+- **Question 1**: [Technical/System Design Question]
+  - **Key Talking Points**:
+    - [Technical concept 1 & application]
+    - [Architecture/system design point 2]
+    - [Candidate's tool/project connection]
 
 ## 3. 🏛️ Company Culture & Leadership Principles Q&A
 Based on the company research brief and culture, generate 3 questions aligned with the company's core values:
-- **Question**: [Culture/Values Alignment Question]
+- **Question 1**: [Culture/Values Alignment Question]
   - **Strategy**: [How the candidate should connect their personal narrative to the company's mission]
 
 ---
