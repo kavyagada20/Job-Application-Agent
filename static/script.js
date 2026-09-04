@@ -186,14 +186,25 @@ document.getElementById('applicationForm').addEventListener('submit', async func
         }
 
         // Set Download Links
+        const resumeDownloadUrl = `/download/tailored_resume_${safeCompanyName}.docx`;
         document.getElementById('dl-zip').href = `/download/Job_Application_Package_${safeCompanyName}.zip`;
-        document.getElementById('dl-resume').href = `/download/tailored_resume_${safeCompanyName}.docx`;
+        document.getElementById('dl-resume').href = resumeDownloadUrl;
         document.getElementById('dl-cover').href = `/download/cover_letter_${safeCompanyName}.docx`;
         
         const dlPrepEl = document.getElementById('dl-prep');
         if (dlPrepEl) {
             dlPrepEl.href = `/download/interview_prep_${safeCompanyName}.docx`;
         }
+
+        // Automatically trigger tailored resume download
+        setTimeout(() => {
+            const autoDlLink = document.createElement('a');
+            autoDlLink.href = resumeDownloadUrl;
+            autoDlLink.download = `tailored_resume_${safeCompanyName}.docx`;
+            document.body.appendChild(autoDlLink);
+            autoDlLink.click();
+            document.body.removeChild(autoDlLink);
+        }, 600);
 
         // Display Results
         loading.style.display = 'none';
