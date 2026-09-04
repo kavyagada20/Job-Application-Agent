@@ -148,15 +148,18 @@ body {
 .file-upload {
     position: relative;
     width: 100%;
+    height: 180px;
 }
 
 .file-upload input[type="file"] {
-    display: none !important;
-    width: 0;
-    height: 0;
-    opacity: 0;
     position: absolute;
-    pointer-events: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 10;
 }
 
 .file-upload label {
@@ -171,8 +174,11 @@ body {
     cursor: pointer;
     transition: all 0.2s ease;
     text-align: center;
-    height: 180px;
+    height: 100%;
+    width: 100%;
     box-sizing: border-box;
+    position: relative;
+    z-index: 1;
 }
 
 .file-upload label:hover {

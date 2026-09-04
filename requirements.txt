@@ -1,5 +1,7 @@
 groq
 pdfplumber
+pypdf
+pdfminer.six
 tavily-python
 python-docx
 streamlit

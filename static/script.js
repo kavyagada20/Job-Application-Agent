@@ -248,21 +248,60 @@ function dismissErrorModal() {
 }
 });
 
-// File Upload Drag & Drop Feedback
+// File Upload Drag & Drop & Click Handling
 const resumeInput = document.getElementById('resume');
 const dropZone = document.getElementById('file-drop-zone');
 
 if (resumeInput && dropZone) {
+    function updateFileLabel(fileName) {
+        dropZone.innerHTML = `
+            <div class="upload-icon" style="color: #10b981;"><i class="fa-solid fa-file-circle-check"></i></div>
+            <span class="upload-title"><strong>File Selected:</strong> ${fileName}</span>
+            <span class="upload-hint">Click or drag another file to change</span>
+        `;
+        dropZone.style.borderColor = '#10b981';
+        dropZone.style.background = 'rgba(16, 185, 129, 0.08)';
+    }
+
     resumeInput.addEventListener('change', function(e) {
         const fileName = e.target.files[0]?.name;
         if (fileName) {
-            dropZone.innerHTML = `
-                <div class="upload-icon" style="color: #10b981;"><i class="fa-solid fa-file-circle-check"></i></div>
-                <span class="upload-title"><strong>File Selected:</strong> ${fileName}</span>
-                <span class="upload-hint">Click or drag another file to change</span>
-            `;
-            dropZone.style.borderColor = '#10b981';
-            dropZone.style.background = 'rgba(16, 185, 129, 0.08)';
+            updateFileLabel(fileName);
         }
     });
+
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        const container = resumeInput.parentElement;
+        if (container) {
+            container.addEventListener(eventName, function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }, false);
+        }
+    });
+
+    ['dragenter', 'dragover'].forEach(eventName => {
+        resumeInput.parentElement?.addEventListener(eventName, () => {
+            dropZone.style.borderColor = '#818cf8';
+            dropZone.style.background = 'rgba(99, 102, 241, 0.15)';
+        }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+        resumeInput.parentElement?.addEventListener(eventName, () => {
+            if (!resumeInput.files || resumeInput.files.length === 0) {
+                dropZone.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                dropZone.style.background = 'rgba(15, 23, 42, 0.6)';
+            }
+        }, false);
+    });
+
+    resumeInput.parentElement?.addEventListener('drop', function(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        if (files && files.length > 0) {
+            resumeInput.files = files;
+            updateFileLabel(files[0].name);
+        }
+    }, false);
 }
