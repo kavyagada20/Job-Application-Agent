@@ -12,9 +12,13 @@ An autonomous, multi-agent AI platform that streamlines the job application proc
 
 ## 🎬 Application Demo Video & Interface Walkthrough
 
-![AI Career Agent Demo Video](job_agent_demo.webp)
+![AI Career Agent Demo Video](assets/demo_walkthrough.webp)
 
-![AI Career Agent Dashboard Screenshot](file:///C:/Users/kavyagada/.gemini/antigravity-ide/brain/dd759009-f4ed-423b-90ee-786ad9bb729d/ai_career_agent_home_1789122164101.png)
+### 📊 Application Results Dashboard & Match Scorecard
+![AI Career Agent Dashboard Screenshot](assets/demo_dashboard.png)
+
+### 🎯 STAR Behavioral & Technical Interview Preparation
+![STAR Behavioral Interview Prep](assets/star_interview_prep.png)
 
 ---
 
