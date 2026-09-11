@@ -10,6 +10,14 @@ An autonomous, multi-agent AI platform that streamlines the job application proc
 
 ---
 
+## 🎬 Application Demo Video & Interface Walkthrough
+
+![AI Career Agent Demo Video](job_agent_demo.webp)
+
+![AI Career Agent Dashboard Screenshot](file:///C:/Users/kavyagada/.gemini/antigravity-ide/brain/dd759009-f4ed-423b-90ee-786ad9bb729d/ai_career_agent_home_1789122164101.png)
+
+---
+
 ## 🌟 Key Features
 
 ### 1. 📊 Candidate-Job Fit Analysis & Match Scorecard
