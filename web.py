@@ -30,12 +30,27 @@ def process():
         jd_input = request.form.get('jd_text', '')
         resume_file = request.files.get('resume')
         
-        if not resume_file or not resume_file.filename:
-            return jsonify({'error': 'Resume file required'}), 400
-
         temp_dir = tempfile.mkdtemp()
-        resume_path = os.path.join(temp_dir, resume_file.filename)
-        resume_file.save(resume_path)
+        created_temp_file = False
+        
+        if resume_file and resume_file.filename:
+            resume_path = os.path.join(temp_dir, resume_file.filename)
+            resume_file.save(resume_path)
+            created_temp_file = True
+        else:
+            # Fallback to local test/sample resume if pre-filled via URL parameters
+            test_resume_pdf = os.path.join(app.root_path, 'my_resume_for_test', 'Kavya_Gada_Data_Science_Resume_7.pdf')
+            test_resume_txt = os.path.join(app.root_path, 'sample_resume.txt')
+            if os.path.exists(test_resume_pdf):
+                resume_path = test_resume_pdf
+            elif os.path.exists(test_resume_txt):
+                resume_path = test_resume_txt
+            else:
+                return jsonify({
+                    'error': 'Resume file required',
+                    'code': 400,
+                    'hint': 'Upload a PDF, DOCX, or TXT resume file.'
+                }), 400
 
         # Step 1: Parse (Extract structure from Resume & JD)
         context = parse_resume_and_jd(resume_path, jd_input)
@@ -83,12 +98,13 @@ def process():
         except Exception as pe:
             print(f"Package output notice: {pe}")
 
-        # Cleanup temp file
-        try:
-            os.remove(resume_path)
-            os.rmdir(temp_dir)
-        except Exception:
-            pass
+        # Cleanup temp file if created dynamically
+        if created_temp_file:
+            try:
+                os.remove(resume_path)
+                os.rmdir(temp_dir)
+            except Exception:
+                pass
 
         fit_score = fit_result.get('score', 85)
         fit_report = fit_result.get('report', str(fit_result))

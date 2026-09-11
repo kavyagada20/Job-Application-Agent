@@ -5,7 +5,7 @@ import config
 
 _client = None
 
-FALLBACK_MODELS = ["openai/gpt-oss-120b", "openai/gpt-oss-20b", "qwen/qwen3.6-27b", "groq/compound"]
+FALLBACK_MODELS = ["qwen/qwen3.8-27b", "qwen/qwen3.6-27b", "groq/compound-mini", "groq/compound"]
 
 def get_groq_client():
     global _client
@@ -80,7 +80,7 @@ def map_error_to_friendly_exception(e):
         hint="Please verify your input files and try again."
     )
 
-def call_groq_completion(messages, model=None, response_format=None, max_retries=5, temperature=0.7, max_tokens=1500):
+def call_groq_completion(messages, model=None, response_format=None, max_retries=3, temperature=0.7, max_tokens=1500):
     """Call Groq API with automatic retry backoff, fallback models, and friendly exception mapping."""
     try:
         client = get_groq_client()
@@ -104,7 +104,10 @@ def call_groq_completion(messages, model=None, response_format=None, max_retries
                     kwargs["response_format"] = response_format
                     
                 completion = client.chat.completions.create(**kwargs)
-                return completion.choices[0].message.content
+                content = completion.choices[0].message.content
+                if not content or not content.strip():
+                    raise ValueError(f"Received empty response from model {current_model}")
+                return content
             except Exception as e:
                 last_error = e
                 err_str = str(e)

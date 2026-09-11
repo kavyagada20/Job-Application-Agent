@@ -246,23 +246,23 @@ function dismissErrorModal() {
     if (loading) loading.style.display = 'none';
     if (mainUI) mainUI.style.display = 'block';
 }
-});
 
 // File Upload Drag & Drop & Click Handling
 const resumeInput = document.getElementById('resume');
 const dropZone = document.getElementById('file-drop-zone');
 
-if (resumeInput && dropZone) {
-    function updateFileLabel(fileName) {
-        dropZone.innerHTML = `
-            <div class="upload-icon" style="color: #10b981;"><i class="fa-solid fa-file-circle-check"></i></div>
-            <span class="upload-title"><strong>File Selected:</strong> ${fileName}</span>
-            <span class="upload-hint">Click or drag another file to change</span>
-        `;
-        dropZone.style.borderColor = '#10b981';
-        dropZone.style.background = 'rgba(16, 185, 129, 0.08)';
-    }
+function updateFileLabel(fileName) {
+    if (!dropZone) return;
+    dropZone.innerHTML = `
+        <div class="upload-icon" style="color: #10b981;"><i class="fa-solid fa-file-circle-check"></i></div>
+        <span class="upload-title"><strong>File Selected:</strong> ${fileName}</span>
+        <span class="upload-hint">Click or drag another file to change</span>
+    `;
+    dropZone.style.borderColor = '#10b981';
+    dropZone.style.background = 'rgba(16, 185, 129, 0.08)';
+}
 
+if (resumeInput && dropZone) {
     resumeInput.addEventListener('change', function(e) {
         const fileName = e.target.files[0]?.name;
         if (fileName) {
@@ -305,3 +305,40 @@ if (resumeInput && dropZone) {
         }
     }, false);
 }
+
+// URL Query Parameter Auto-Fill & Quick Sample Data Loaders
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const jdParam = urlParams.get('jd_text');
+    const resumeParam = urlParams.get('resume');
+
+    const jdTextarea = document.getElementById('jd_text');
+
+    if (jdParam && jdTextarea) {
+        jdTextarea.value = jdParam;
+    }
+
+    if (resumeParam) {
+        if (resumeInput) {
+            resumeInput.removeAttribute('required');
+        }
+        updateFileLabel(`Pre-loaded: ${resumeParam}`);
+    }
+
+    const sampleJdBtn = document.getElementById('loadSampleJdBtn');
+    if (sampleJdBtn && jdTextarea) {
+        sampleJdBtn.addEventListener('click', function() {
+            jdTextarea.value = `Deloitte Data Science & NLP Position:\n\nKey Responsibilities:\n1. NLP Model Development: Design, develop, and implement state-of-the-art NLP algorithms and models to extract insights and patterns from large volumes of textual data. Leverage machine learning and deep learning techniques (Transformers, BERT, GPT) for text classification, entity extraction, and document summarization.\n2. Data Preprocessing & Feature Engineering: Preprocess and clean textual data using NLTK, spaCy, and scikit-learn.\n3. Model Evaluation & Validation: Evaluate performance using statistical metrics, Docker containerization, and MLOps practices.\n4. Collaboration: Work with cross-functional teams to integrate NLP solutions into production systems.\n\nQualifications:\n- Master's or Ph.D. in CS, Statistics, or related field with 5+ years experience in Data Science & NLP / GenAI.\n- Strong Python skills, TensorFlow/PyTorch, PySpark, AWS/Azure, Docker, and Kubernetes.`;
+        });
+    }
+
+    const sampleResumeBtn = document.getElementById('loadSampleResumeBtn');
+    if (sampleResumeBtn) {
+        sampleResumeBtn.addEventListener('click', function() {
+            if (resumeInput) {
+                resumeInput.removeAttribute('required');
+            }
+            updateFileLabel("Pre-selected: Kavya_Gada_Data_Science_Resume_7.pdf");
+        });
+    }
+});
