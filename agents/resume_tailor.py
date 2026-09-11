@@ -6,7 +6,7 @@ def tailor_resume(context):
     """Tailor the candidate's resume to match target job requirements with rich formatting."""
     raw_resume = context.get('raw_resume', '')
     resume_json = json.dumps(context.get('resume', {}), indent=2)
-    resume_text = raw_resume if raw_resume and len(raw_resume) > 50 else resume_json
+    resume_text = (raw_resume if raw_resume and len(raw_resume) > 50 else resume_json)[:3500]
     
     kw_raw = context.get('job_description', {}).get('keywords', [])
     keywords = ', '.join(kw_raw) if isinstance(kw_raw, list) else str(kw_raw or '')

@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, send_file, jsonify
 import os
 import tempfile
+import time
 import traceback
 from concurrent.futures import ThreadPoolExecutor
 
@@ -68,9 +69,13 @@ def process():
         # Step 3: Run Remaining 5 AI Agents in parallel for fast response (< 10 seconds)
         with ThreadPoolExecutor(max_workers=5) as executor:
             future_tailor = executor.submit(tailor_resume, context)
+            time.sleep(0.1)
             future_cover = executor.submit(write_cover_letter, context)
+            time.sleep(0.1)
             future_fit = executor.submit(analyze_job_fit, context)
+            time.sleep(0.1)
             future_prep = executor.submit(generate_interview_prep, context)
+            time.sleep(0.1)
             future_email = executor.submit(generate_cold_email, context)
 
         def safe_get_future(future, default_val=""):

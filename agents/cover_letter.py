@@ -7,7 +7,7 @@ def write_cover_letter(context):
     """Write a highly personalized, compelling narrative cover letter."""
     raw_resume = context.get('raw_resume', '')
     resume_json = json.dumps(context.get('resume', {}), indent=2)
-    resume_text = raw_resume if raw_resume and len(raw_resume) > 50 else resume_json
+    resume_text = (raw_resume if raw_resume and len(raw_resume) > 50 else resume_json)[:3500]
 
     raw_jd = context.get('raw_jd', '')
     
@@ -23,7 +23,7 @@ def write_cover_letter(context):
 
     job_title = context.get('job_description', {}).get('job_title', 'Role')
     company_name = context.get('job_description', {}).get('company_name', 'Company')
-    company_brief = context.get('company_brief', '')
+    company_brief = str(context.get('company_brief', ''))[:1000]
 
     prompt = (
         f"You are a professional executive career strategist.\n"

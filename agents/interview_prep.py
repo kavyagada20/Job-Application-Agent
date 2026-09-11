@@ -6,11 +6,11 @@ def generate_interview_prep(context):
     """Generate STAR behavioral questions, technical Q&A, and culture prep."""
     raw_resume = context.get('raw_resume', '')
     resume_json = str(context.get('resume', ''))
-    resume_text = raw_resume if raw_resume and len(raw_resume) > 50 else resume_json
+    resume_text = (raw_resume if raw_resume and len(raw_resume) > 50 else resume_json)[:3500]
 
     raw_jd = context.get('raw_jd', '')
-    jd_text = raw_jd if raw_jd and len(raw_jd) > 50 else str(context.get('job_description', ''))
-    company_brief = str(context.get('company_brief', ''))
+    jd_text = (raw_jd if raw_jd and len(raw_jd) > 50 else str(context.get('job_description', '')))[:2500]
+    company_brief = str(context.get('company_brief', ''))[:1000]
 
     prompt_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'prompts', 'interview_prep_prompt.txt')
     with open(prompt_path, 'r', encoding='utf-8') as f:
@@ -25,7 +25,7 @@ def generate_interview_prep(context):
     output = call_groq_completion(
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
-        max_tokens=2500
+        max_tokens=1200
     )
 
     # Clean any orphan asterisks in table rows or headers
