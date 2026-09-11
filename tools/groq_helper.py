@@ -80,6 +80,18 @@ def map_error_to_friendly_exception(e):
         hint="Please verify your input files and try again."
     )
 
+def clean_thinking_process(text):
+    if not text:
+        return ""
+    text = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL)
+    if re.match(r'^\s*(?:Thinking Process|Thinking|Reasoning):', text, re.IGNORECASE):
+        match = re.search(r'(\n#|\n\*\*|\n---|\n[1-9]\.\s+\*\*)', text)
+        if match:
+            text = text[match.start():]
+        else:
+            text = re.sub(r'^\s*(?:Thinking Process|Thinking|Reasoning):.*?\n\n', '', text, flags=re.DOTALL | re.IGNORECASE)
+    return text.strip()
+
 def call_groq_completion(messages, model=None, response_format=None, max_retries=3, temperature=0.7, max_tokens=1500):
     """Call Groq API with automatic retry backoff, fallback models, and friendly exception mapping."""
     try:
@@ -107,7 +119,7 @@ def call_groq_completion(messages, model=None, response_format=None, max_retries
                 content = completion.choices[0].message.content
                 if not content or not content.strip():
                     raise ValueError(f"Received empty response from model {current_model}")
-                return content
+                return clean_thinking_process(content)
             except Exception as e:
                 last_error = e
                 err_str = str(e)
