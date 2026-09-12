@@ -19,9 +19,6 @@ An autonomous, multi-agent AI platform that streamlines the job application proc
 ### 📊 Application Results Dashboard & Match Scorecard
 ![AI Career Agent Dashboard Screenshot](assets/demo_dashboard.png)
 
-### 🎯 STAR Behavioral & Technical Interview Preparation
-![STAR Behavioral Interview Prep](assets/star_interview_prep.png)
-
 ---
 
 ## 🌟 Key Features
@@ -30,33 +27,25 @@ An autonomous, multi-agent AI platform that streamlines the job application proc
 - Calculates a quantitative **Match Score (0–100%)**.
 - Highlights **Top Strengths**, **Skill & Experience Gaps**, and **High-Impact Keywords** to emphasize during interviews.
 
-![Fit Analysis Scorecard](assets/demo_dashboard.png)
+### 2. 🌐 Job Posting URL Auto-Scraper
+- Supports both **raw text** job descriptions and direct **HTTP/HTTPS posting URLs**.
+- Automatically strips boilerplate navigation/scripts, with fallback web search retrieval if a page is bot-protected.
 
-### 2. 🏢 Real-Time Company & Industry Research
+### 3. 🏢 Real-Time Company & Industry Research
 - Uses **Tavily AI Search** to fetch company mission, product offerings, culture, and tech stack insights.
 
-![Company Intelligence](assets/company_intelligence.png)
-
-### 3. 📄 Smart Resume Tailoring
+### 4. 📄 Smart Resume Tailoring
 - Rewrites resume bullet points to map directly to key job requirements while preserving factual authenticity.
 
-![Tailored Resume](assets/tailored_resume.png)
-
-### 4. ✉️ Bespoke Cover Letters
+### 5. ✉️ Bespoke Cover Letters
 - Drafts personalized cover letter narratives aligned with company values and job expectations.
 
-![Cover Letter](assets/cover_letter.png)
-
-### 5. 🎯 STAR Method & Technical Interview Prep
+### 6. 🎯 STAR Method & Technical Interview Prep
 - Generates 5 role-specific behavioral questions with **Situation, Task, Action, Result** response strategies.
 - Provides technical Q&A and company culture alignment talking points.
 
-![STAR Behavioral Interview Prep](assets/star_interview_prep.png)
-
-### 6. 📩 Recruiter & Hiring Manager Cold Email Generator
+### 7. 📩 Recruiter & Hiring Manager Cold Email Generator
 - Drafts high-converting **Direct Email** templates and **LinkedIn InMail** messages customized to the candidate and company.
-
-![Recruiter Cold Email](assets/cold_email.png)
 
 ### 8. 📦 DOCX Export & 1-Click ZIP Packaging
 - Automatically generates formatted Microsoft Word (`.docx`) files for all assets.

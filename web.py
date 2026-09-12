@@ -111,8 +111,9 @@ def process():
             except Exception:
                 pass
 
-        fit_score = fit_result.get('score', 85)
+        fit_score = fit_result.get('score', 75)
         fit_report = fit_result.get('report', str(fit_result))
+        resume_name = os.path.basename(resume_path)
 
         return jsonify({
             'company_brief': context.get('company_brief', ''),
@@ -126,7 +127,8 @@ def process():
             'job_title': job_title,
             'location': location,
             'experience_requirements': experience_requirements,
-            'salary_range': salary_range
+            'salary_range': salary_range,
+            'resume_name': resume_name
         })
 
     except Exception as e:

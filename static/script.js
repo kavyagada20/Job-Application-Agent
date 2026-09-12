@@ -176,6 +176,7 @@ document.getElementById('applicationForm').addEventListener('submit', async func
         const badgesEl = document.getElementById('jobMetadataBadges');
         if (badgesEl) {
             let badgesHtml = '';
+            if (data.resume_name) badgesHtml += `<span class="meta-tag" style="background: rgba(99, 102, 241, 0.25); border-color: #818cf8; color: #c7d2fe; font-weight: 600;"><i class="fa-solid fa-file-pdf"></i> Resume: ${data.resume_name}</span>`;
             if (data.job_title) badgesHtml += `<span class="meta-tag"><i class="fa-solid fa-briefcase"></i> ${data.job_title}</span>`;
             if (data.location) badgesHtml += `<span class="meta-tag"><i class="fa-solid fa-location-dot"></i> ${data.location}</span>`;
             if (data.experience_requirements) badgesHtml += `<span class="meta-tag"><i class="fa-solid fa-user-graduate"></i> ${data.experience_requirements}</span>`;

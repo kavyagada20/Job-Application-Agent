@@ -29,8 +29,8 @@ def analyze_job_fit(context):
 
     # Extract score percentage if present
     match = re.search(r'Match Score:\s*(\d+)%', analysis_text, re.IGNORECASE)
-    score = int(match.group(1)) if match else 85
-    score = min(max(score, 50), 100)
+    score = int(match.group(1)) if match else 75
+    score = min(max(score, 0), 100)
 
     return {
         'score': score,
