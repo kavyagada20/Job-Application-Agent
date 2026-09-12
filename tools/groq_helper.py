@@ -84,12 +84,12 @@ def clean_thinking_process(text):
     if not text:
         return ""
     text = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL)
-    if re.match(r'^\s*(?:Thinking Process|Thinking|Reasoning):', text, re.IGNORECASE):
-        match = re.search(r'(\n#|\n\*\*|\n---|\n[1-9]\.\s+\*\*)', text)
+    if re.search(r'(?:Thinking Process|Deconstruct and Analyze|Candidate Resume:)', text[:400], re.IGNORECASE):
+        match = re.search(r'(\n#|\n\*\*|\n---|###|##|\n1\.\s+(?:Behavioral|Role|Technical|Executive|STAR|Candidate|Question|Overview))', text)
         if match:
             text = text[match.start():]
         else:
-            text = re.sub(r'^\s*(?:Thinking Process|Thinking|Reasoning):.*?\n\n', '', text, flags=re.DOTALL | re.IGNORECASE)
+            text = re.sub(r'^\s*(?:Thinking Process|Thinking|Reasoning|Deconstruct).*?\n\n', '', text, flags=re.DOTALL | re.IGNORECASE)
     return text.strip()
 
 def call_groq_completion(messages, model=None, response_format=None, max_retries=3, temperature=0.7, max_tokens=1500):

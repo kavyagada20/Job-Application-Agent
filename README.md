@@ -28,25 +28,33 @@ An autonomous, multi-agent AI platform that streamlines the job application proc
 - Calculates a quantitative **Match Score (0–100%)**.
 - Highlights **Top Strengths**, **Skill & Experience Gaps**, and **High-Impact Keywords** to emphasize during interviews.
 
-### 2. 🌐 Job Posting URL Auto-Scraper
-- Supports both **raw text** job descriptions and direct **HTTP/HTTPS posting URLs**.
-- Automatically strips boilerplate navigation/scripts, with fallback web search retrieval if a page is bot-protected.
+![Fit Analysis Scorecard](assets/demo_dashboard.png)
 
-### 3. 🏢 Real-Time Company & Industry Research
+### 2. 🏢 Real-Time Company & Industry Research
 - Uses **Tavily AI Search** to fetch company mission, product offerings, culture, and tech stack insights.
 
-### 4. 📄 Smart Resume Tailoring
+![Company Intelligence](assets/company_intelligence.png)
+
+### 3. 📄 Smart Resume Tailoring
 - Rewrites resume bullet points to map directly to key job requirements while preserving factual authenticity.
 
-### 5. ✉️ Bespoke Cover Letters
+![Tailored Resume](assets/tailored_resume.png)
+
+### 4. ✉️ Bespoke Cover Letters
 - Drafts personalized cover letter narratives aligned with company values and job expectations.
 
-### 6. 🎯 STAR Method & Technical Interview Prep
+![Cover Letter](assets/cover_letter.png)
+
+### 5. 🎯 STAR Method & Technical Interview Prep
 - Generates 5 role-specific behavioral questions with **Situation, Task, Action, Result** response strategies.
 - Provides technical Q&A and company culture alignment talking points.
 
-### 7. 📩 Recruiter & Hiring Manager Cold Email Generator
+![STAR Behavioral Interview Prep](assets/star_interview_prep.png)
+
+### 6. 📩 Recruiter & Hiring Manager Cold Email Generator
 - Drafts high-converting **Direct Email** templates and **LinkedIn InMail** messages customized to the candidate and company.
+
+![Recruiter Cold Email](assets/cold_email.png)
 
 ### 8. 📦 DOCX Export & 1-Click ZIP Packaging
 - Automatically generates formatted Microsoft Word (`.docx`) files for all assets.
