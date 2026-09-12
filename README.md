@@ -8,6 +8,8 @@
 
 An autonomous, multi-agent AI platform that streamlines the job application process from start to finish. Leveraging **Groq AI (Llama 3.3)** and **Tavily Web Search**, the suite evaluates candidate-job compatibility, scrapes posting URLs, conducts deep company research, tailors resumes, writes cover letters, drafts recruiter outreach messages, and builds custom STAR interview preparation guides.
 
+> 📄 **Tested Candidate Resume Version:** [`my_resume_for_test/Kavya_Gada_Data_Science_Resume_7.pdf`](my_resume_for_test/Kavya_Gada_Data_Science_Resume_7.pdf)
+
 ---
 
 ## 🎬 Application Demo Video & Interface Walkthrough
